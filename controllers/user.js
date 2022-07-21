@@ -3,13 +3,13 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user.js');
 
 const getAllUsers = (req,res,next)=>{
-      User.find().populate('roles').populate('organizations')
+      User.find().populate('roles').populate('organizations').populate('organizations.organization').populate('organizations.roles')
      .then(users => res.status(200).json(users))
      .catch(error => res.status(400).json({ error }));
 }
 
 const getUserById = (req,res,next)=>{
-         User.findOne({_id:req.params.id}).populate('roles').populate('organizations')
+         User.findOne({_id:req.params.id}).populate('roles').populate('organizations').populate('organizations.organization').populate('organizations.roles')
         .then(user => res.status(200).json(user))
         .catch(error => res.status(400).json({ error }));
 }
