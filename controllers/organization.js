@@ -1,6 +1,7 @@
 const Organization = require('../models/organization.js');
 const User = require('../models/user.js');
 const Role = require('../models/role.js');
+const {login} = require("./user");
 const getAllOrganizations = (req,res,next)=>{
       Organization.find().populate('users')
      .then(organizations => res.status(200).json(organizations))
@@ -34,16 +35,35 @@ const deleteOrganization = (req,res,next)=>{
        .catch(error => res.status(400).json({ error }));
  
 }
-const  addProfessionalToOrganization = async (req,res,next)=>{
-    const {idOrganization} = req.body;
-    const {idProfessional} = req.body;
+const  addAdminToOrganizations = async (req,res,next)=>{
+    const {id} = req.params;
+    const idsOrg = req.body;
     var idRole;
-   await Role.findOne({name:"admin"})
+    var organizations = []
+    await Role.findOne({name:"admin"})
         .then(role => idRole = role._id)
         .catch(error => console.log(error));
-   await User.updateOne({ _id: idProfessional }, {$push: { "organizations": {organization:idOrganization,roles:[idRole]}}})
-        .then(() => res.status(200).json({ message: 'Professional has been added successfully !'}))
+    for (let i = 0 ; i< idsOrg.length ; i++){
+        organizations.push({
+            organization:idsOrg[i].value,
+            roles:[idRole]
+        })
+    }
+    await User.updateOne({ _id: id }, {$push: { "organizations": {$each:organizations}}})
+        .then(() => res.status(200).json({ message: 'Admin has been added successfully !'}))
         .catch(error => res.status(400).json({ error }));
 }
+const addUsersToOrganization = async (req,res,next)=>{
+      const {id} = req.params;
+      const ids = req.body;
+      console.log(ids)
+      console.log(id)
+      for (let i = 0 ; i< ids.length ; i++){
+      await Organization.updateOne({ _id: ids[i] }, {$push: { "users": id}})
+        .then(() => console.log("success"))
+        .catch(error => res.status(400).json({ error }));
+}
+}
 
-module.exports = {getAllOrganizations,getOrganizationById,addOrganization,updateOrganization,deleteOrganization,addProfessionalToOrganization}
+
+module.exports = {getAllOrganizations,getOrganizationById,addOrganization,updateOrganization,deleteOrganization,addAdminToOrganizations,addUsersToOrganization}

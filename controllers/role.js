@@ -12,6 +12,11 @@ const getRoleById = (req,res,next)=>{
         .then(role => res.status(200).json(role))
         .catch(error => res.status(400).json({ error }));
 }
+const getRoleByName = (req,res,next)=>{
+    Role.findOne({name:req.query.name})
+        .then(role => res.status(200).json(role))
+        .catch(error => res.status(400).json({ error }));
+}
 
 const addRole = (req,res,next) =>{
 const role = new Role({
@@ -36,4 +41,4 @@ const deleteRole = (req,res,next)=>{
 }
 
 
-module.exports = {getAllRoles,getRoleById,addRole,updateRole,deleteRole}
+module.exports = {getAllRoles,getRoleById,getRoleByName,addRole,updateRole,deleteRole}

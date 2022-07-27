@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema({
   password: {type: String},
   adresse: {type: String, required: true},
   phoneNumber: {type: String, required: true, unique: true},
+  isSuperAdmin :{type:Boolean,default:false},
   roles: [{type: mongoose.Schema.Types.ObjectId, ref: 'Role'}],
   organizations: [{
     organization:{ type: mongoose.Schema.Types.ObjectId, ref: 'Organization'},
