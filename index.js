@@ -10,6 +10,7 @@ const {auth} = require('./midllewares/auth')
 const roleRoute = require('./routes/role');
 const organizationRoute = require('./routes/organization');
 const userRoute = require('./routes/user');
+const unavailabilityRoute = require('./routes/unavailability');
 mongoose.connect(mongodb_url, { useNewUrlParser: true , useUnifiedTopology: true })
   .then(() => console.log('Connection to MongoDB successful !'))
   .catch((err) => console.log('Connection to MongoDB failed !' + err));
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/role',roleRoute);
 app.use('/api/v1/organization',organizationRoute);
 app.use('/api/v1/user',userRoute);
+app.use('/api/v1/unavailability',unavailabilityRoute);
 const {sendEmail} = require('./services/emailVerification')
 app.post('/email',sendEmail)
 

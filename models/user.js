@@ -11,7 +11,8 @@ const userSchema = mongoose.Schema({
   roles: [{type: mongoose.Schema.Types.ObjectId, ref: 'Role'}],
   organizations: [{
     organization:{ type: mongoose.Schema.Types.ObjectId, ref: 'Organization'},
-    roles:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Role'}]
+    roles:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Role'}],
+    unavailability:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Unavailability'}]
   }]
 
 })

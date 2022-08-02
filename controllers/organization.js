@@ -1,7 +1,8 @@
 const Organization = require('../models/organization.js');
 const User = require('../models/user.js');
 const Role = require('../models/role.js');
-const {login} = require("./user");
+
+
 const getAllOrganizations = (req,res,next)=>{
       Organization.find().populate('users')
      .then(organizations => res.status(200).json(organizations))
@@ -9,7 +10,20 @@ const getAllOrganizations = (req,res,next)=>{
 }
 
 const getOrganizationById = (req,res,next)=>{
-        Organization.findOne({_id:req.params.id}).populate('users')
+        Organization.findOne({_id:req.params.id}).populate({
+        path: 'unavailability',
+        populate: [{
+            path: 'users',
+            model: 'User'
+        }
+        ]
+    }).populate('users')
+        .then(organization => res.status(200).json(organization))
+        .catch(error => res.status(400).json({ error }));
+}
+
+const getOrganizationByName = (req,res,next)=>{
+    Organization.findOne({name:req.params.name}).populate('users')
         .then(organization => res.status(200).json(organization))
         .catch(error => res.status(400).json({ error }));
 }
@@ -35,6 +49,7 @@ const deleteOrganization = (req,res,next)=>{
        .catch(error => res.status(400).json({ error }));
  
 }
+
 const  addAdminToOrganizations = async (req,res,next)=>{
     const {id} = req.params;
     const idsOrg = req.body;
@@ -66,4 +81,4 @@ const addUsersToOrganization = async (req,res,next)=>{
 }
 
 
-module.exports = {getAllOrganizations,getOrganizationById,addOrganization,updateOrganization,deleteOrganization,addAdminToOrganizations,addUsersToOrganization}
+module.exports = {getAllOrganizations,getOrganizationById,getOrganizationByName,addOrganization,updateOrganization,deleteOrganization,addAdminToOrganizations,addUsersToOrganization}
